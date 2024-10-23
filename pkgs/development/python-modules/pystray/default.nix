@@ -1,5 +1,6 @@
 {
   lib,
+  stdenv,
   buildPythonPackage,
   fetchFromGitHub,
   fetchpatch,
@@ -51,8 +52,13 @@ buildPythonPackage rec {
     six
     pygobject3
     gtk3
+  ] ++ lib.optionals (!stdenv.hostPlatform.isDarwin) [
     libayatana-appindicator
   ];
+
+  env = lib.optionalAttrs stdenv.hostPlatform.isDarwin {
+    PYSTRAY_BACKEND = "darwin";
+  };
 
   nativeCheckInputs = [ xvfb-run ];
 
@@ -69,7 +75,7 @@ buildPythonPackage rec {
       gpl3Plus
       lgpl3Plus
     ];
-    platforms = platforms.linux;
+    platforms = platforms.linux ++ platforms.darwin;
     maintainers = with maintainers; [ jojosch ];
   };
 }
