@@ -1,4 +1,5 @@
-{ lib
+{ stdenv
+, lib
 , buildPythonApplication
 , copyDesktopItems
 , fetchPypi
@@ -36,7 +37,7 @@ buildPythonApplication rec {
     mpv
     pillow
     python-mpv-jsonipc
-
+  ] ++ lib.optionals stdenv.hostPlatform.isLinux [
     # gui dependencies
     pystray
     tkinter
